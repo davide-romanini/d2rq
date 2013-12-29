@@ -8,6 +8,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import de.fuberlin.wiwiss.d2rq.SystemLoader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Initialize D2R server on startup of an appserver such as Tomcat. This listener should
@@ -50,9 +54,32 @@ public class WebappInitListener implements ServletContextListener {
 	}
 	
 	private String absolutize(String fileName, ServletContext context) {
+                String origName = fileName;
 		if (!fileName.matches("[a-zA-Z0-9]+:.*")) {
 			fileName = context.getRealPath("WEB-INF/" + fileName);
 		}
+                // ServletContext.getRealPath isn't guaranteed to be not null
+                if (fileName == null) {
+                    File tmpFile = null; 
+                    try {
+                        InputStream i = context.getResourceAsStream("WEB-INF/" + origName);
+                        File tmpDir = (File) context.getAttribute("javax.servlet.context.tempdir");
+                        tmpFile = File.createTempFile("__c", origName, tmpDir);
+
+                        OutputStream out = new FileOutputStream(tmpFile);
+                        byte[] buf = new byte[1024];
+                        int len;
+                        while ((len = i.read(buf)) > 0) {
+                            out.write(buf, 0, len);
+                        }
+                        out.close();
+                        i.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    log.info("Saved " + fileName + " into " + tmpFile);
+                    fileName = tmpFile.getAbsolutePath();
+                }
 		return ConfigLoader.toAbsoluteURI(fileName);
 	}
 }

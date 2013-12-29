@@ -14,6 +14,8 @@ import org.apache.velocity.context.Context;
 
 import de.fuberlin.wiwiss.pubby.negotiation.ContentTypeNegotiator;
 import de.fuberlin.wiwiss.pubby.negotiation.MediaRangeSpec;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class VelocityWrapper {
 	private final static String VELOCITY_ENGINE_INSTANCE = 
@@ -42,8 +44,11 @@ public class VelocityWrapper {
 	
 	public static synchronized void initEngine(D2RServer d2r, ServletContext servletContext) {
 		try {
-			VelocityEngine engine = new VelocityEngine(servletContext.getRealPath("/WEB-INF/velocity.properties"));
-			engine.init();
+			InputStream propertiesStream = servletContext.getResourceAsStream("/WEB-INF/velocity.properties");
+                        Properties prop = new Properties();
+                        prop.load(propertiesStream);
+			VelocityEngine engine = new VelocityEngine(prop);
+                        engine.init();
 			servletContext.setAttribute(VELOCITY_ENGINE_INSTANCE, engine);
 			servletContext.setAttribute(VELOCITY_DEFAULT_CONTEXT, initDefaultContext(d2r));
 		} catch (Exception ex) {
