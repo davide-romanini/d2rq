@@ -1,3 +1,12 @@
+# THIS IS A FORK OF D2RQ
+
+ * Mavenized project
+ * Factored out d2rq-core (server actually broken)
+ * Update to latest JENA
+ * Merged pull requests 201 (free text search), 203, 205 from ontoforce fork
+
+Tests *don't pass all* at the moment, you're warned.
+
 # D2RQ – A Database to RDF Mapper
 
 D2RQ exposes the contents of relational databases as RDF. It consists of:
