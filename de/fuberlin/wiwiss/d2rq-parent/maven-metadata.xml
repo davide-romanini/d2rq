@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>de.fuberlin.wiwiss</groupId>
+  <artifactId>d2rq-parent</artifactId>
+  <versioning>
+    <versions>
+      <version>0.9.0-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20140113114717</lastUpdated>
+  </versioning>
+</metadata>
